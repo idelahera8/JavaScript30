@@ -19,4 +19,10 @@ window.addEventListener("keydown", function(e) {
     // starts playing again. To avoid that, we need to restart the audio to 0 everytime the key is pressed
     audio.currentTime = 0
     audio.play()
+
+    // We also need to check if the selected key is one of the keys possible and select the button on the page
+    const key = document.querySelector(`div[data-key="${e.keyCode}"]`)
+
+    // Once checked that the pressed key is valid, we change its state
+    key.classList.add("playing")
 })
