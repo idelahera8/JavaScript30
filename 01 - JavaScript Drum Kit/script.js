@@ -1,28 +1,43 @@
-// Create an event that listens on the whole window (when the window is active) if someone presses a key
-// if that-s the case, we trigger a function that gets as a parameter (e) the event itself
-window.addEventListener("keydown", function(e) {
+// We create two events to listen for any key presses. One of them is in charge of
+// making the audio play and the other of making the pressed key highlight
+window.addEventListener("keydown", addAudio)
+window.addEventListener("keydown", addHighlight)
 
-    // We search if there is an audio element with the data-key value equal to the key value of the pressed key
-    // and we assign it to a variable (same as when we select any element in the DOM and assign it to a variable)
-    // so we can use it later   
-    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
-    
-    // Then we check if there actually exists an audio element with that key value
-    // If it doesn-t, we return the function so nothing else happens. (We don-t want anything to happen when a user
-    // clicks any of the keys that are not on the menu)
+// Create a third event that listens to when a key is up (no longer pressed) to
+// remove the highlight when that happens
+window.addEventListener("keyup", removeHighlight)
+
+// This function selects the audio element that has the same data-key value as the
+// keyCode of the pressed key. We check if the audio element exists (there are only
+// audios associated to certain keys) and then start the audio from the begining
+// every time it is pressed and play the key
+function addAudio(element) {
+    const audio = document.querySelector(`audio[data-key="${element.keyCode}"]`)
     if (!audio) {
         return
     }
-
-    // After checking that the audio element exists, we play it
-    // The problem is that if we try to press several times the key very fast, we need the audio to finish before it
-    // starts playing again. To avoid that, we need to restart the audio to 0 everytime the key is pressed
     audio.currentTime = 0
     audio.play()
+}
 
-    // We also need to check if the selected key is one of the keys possible and select the button on the page
-    const key = document.querySelector(`div[data-key="${e.keyCode}"]`)
-
-    // Once checked that the pressed key is valid, we change its state
+// Select any div element with the same data-key value as the keyCode of the pressed
+// key. Check if the key element exists (there are only divs associated to certain
+// keys) and then add the class "playing" which contains the highlight css
+function addHighlight(element) {
+    const key = document.querySelector(`div[data-key="${element.keyCode}"]`)
+    if (!key) {
+        return
+    }
     key.classList.add("playing")
-})
+}
+
+// Select any div element with the same data-key value as the keyCode of the no-longer
+// pressed key. Check if the key element exists (there are only divs associated to 
+// certain keys) and then remove the class "playing" which contains the highlight css
+function removeHighlight(element) {
+    const key = document.querySelector(`div[data-key="${element.keyCode}"]`)
+    if (!key) {
+        return
+    }
+    key.classList.remove("playing")
+}
